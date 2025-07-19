@@ -1,0 +1,11 @@
+prefix=/Users/admin/anil_reddaboina/ai_learning/document_processing/ailearning
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+toolexeclibdir=${libdir}
+includedir=/Users/admin/anil_reddaboina/ai_learning/document_processing/ailearning/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.4.4
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

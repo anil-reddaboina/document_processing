@@ -1,2 +1,7 @@
 ailearning
 .env
+documentation_generator.egg-info
+*.dist
+/ailearning
+.env
+.env

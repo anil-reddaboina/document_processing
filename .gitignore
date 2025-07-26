@@ -9,3 +9,4 @@ ailearning
 notebook/data/
 notebook/logs/
 .env
+dist/documentation_generator-0.1.0-py3.10.egg

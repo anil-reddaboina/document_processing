@@ -5,3 +5,7 @@ documentation_generator.egg-info
 /ailearning
 __pycache__/
 logs/
+ailearning
+notebook/data/
+notebook/logs/
+.env

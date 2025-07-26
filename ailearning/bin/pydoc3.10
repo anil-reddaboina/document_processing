@@ -1,5 +1,0 @@
-#!/Users/admin/anil_reddaboina/ai_learning/document_processing/ailearning/bin/python3.10
-
-import pydoc
-if __name__ == '__main__':
-    pydoc.cli()

@@ -3,4 +3,5 @@ ailearning
 documentation_generator.egg-info
 *.dist
 /ailearning
-.env
+__pycache__/
+logs/

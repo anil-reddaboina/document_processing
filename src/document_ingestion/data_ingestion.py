@@ -92,12 +92,10 @@ class FaissManager:
         self.vs = FAISS.from_texts(texts=texts, embedding=self.emb, metadatas=metadatas or [])
         self.vs.save_local(str(self.index_dir))
         return self.vs
-        
-        
 class ChatIngestor:
     def __init__( self,
-        temp_base: str = None,
-        faiss_base: str = None,
+        temp_base: str = "data",
+        faiss_base: str = "faiss_index",
         use_session_dirs: bool = True,
         session_id: Optional[str] = None,
     ):
@@ -108,16 +106,8 @@ class ChatIngestor:
             self.use_session = use_session_dirs
             self.session_id = session_id or _session_id()
             
-            # Get project root directory (assuming this file is in src/document_ingestion/)
-            project_root = Path(__file__).parent.parent.parent
-            default_temp_base = project_root / "data"
-            default_faiss_base = project_root / "faiss_index"
-            
-            self.temp_base = Path(temp_base) if temp_base else default_temp_base
-            self.faiss_base = Path(faiss_base) if faiss_base else default_faiss_base
-            
-            self.temp_base.mkdir(parents=True, exist_ok=True)
-            self.faiss_base.mkdir(parents=True, exist_ok=True)
+            self.temp_base = Path(temp_base); self.temp_base.mkdir(parents=True, exist_ok=True)
+            self.faiss_base = Path(faiss_base); self.faiss_base.mkdir(parents=True, exist_ok=True)
             
             self.temp_dir = self._resolve_dir(self.temp_base)
             self.faiss_dir = self._resolve_dir(self.faiss_base)
@@ -145,7 +135,7 @@ class ChatIngestor:
         self.log.info("Documents split", chunks=len(chunks), chunk_size=chunk_size, overlap=chunk_overlap)
         return chunks
     
-    def build_retriever( self,
+    def built_retriver( self,
         uploaded_files: Iterable,
         *,
         chunk_size: int = 1000,
@@ -175,21 +165,14 @@ class ChatIngestor:
             
         except Exception as e:
             self.log.error("Failed to build retriever", error=str(e))
-            raise DocumentPortalException("Failed to build retriever", e) from e
-
-            
-        
-            
+            raise DocumentPortalException("Failed to build retriever", e) from e         
 class DocHandler:
     """
     PDF save + read (page-wise) for analysis.
     """
     def __init__(self, data_dir: Optional[str] = None, session_id: Optional[str] = None):
         self.log = CustomerLogger().get_logger(__name__)
-        # Get project root directory (assuming this file is in src/document_ingestion/)
-        project_root = Path(__file__).parent.parent.parent
-        default_data_dir = project_root / "data" / "document_analysis"
-        self.data_dir = data_dir or os.getenv("DATA_STORAGE_PATH", str(default_data_dir))
+        self.data_dir = data_dir or os.getenv("DATA_STORAGE_PATH", os.path.join(os.getcwd(), "data", "document_analysis"))
         self.session_id = session_id or _session_id("session")
         self.session_path = os.path.join(self.data_dir, self.session_id)
         os.makedirs(self.session_path, exist_ok=True)
@@ -229,12 +212,9 @@ class DocumentComparator:
     """
     Save, read & combine PDFs for comparison with session-based versioning.
     """
-    def __init__(self, base_dir: str = None, session_id: Optional[str] = None):
+    def __init__(self, base_dir: str = "data/document_compare", session_id: Optional[str] = None):
         self.log = CustomerLogger().get_logger(__name__)
-        # Get project root directory (assuming this file is in src/document_ingestion/)
-        project_root = Path(__file__).parent.parent.parent
-        default_base_dir = project_root / "data" / "document_compare"
-        self.base_dir = Path(base_dir) if base_dir else default_base_dir
+        self.base_dir = Path(base_dir)
         self.session_id = session_id or _session_id()
         self.session_path = self.base_dir / self.session_id
         self.session_path.mkdir(parents=True, exist_ok=True)

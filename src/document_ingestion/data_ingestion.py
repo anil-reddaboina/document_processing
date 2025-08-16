@@ -134,8 +134,8 @@ class ChatIngestor:
         chunks = splitter.split_documents(docs)
         self.log.info("Documents split", chunks=len(chunks), chunk_size=chunk_size, overlap=chunk_overlap)
         return chunks
-    
-    def built_retriver( self,
+ 
+    def build_retriver( self,
         uploaded_files: Iterable,
         *,
         chunk_size: int = 1000,
@@ -165,7 +165,8 @@ class ChatIngestor:
             
         except Exception as e:
             self.log.error("Failed to build retriever", error=str(e))
-            raise DocumentPortalException("Failed to build retriever", e) from e         
+            raise DocumentPortalException("Failed to build retriever", e) from e
+  
 class DocHandler:
     """
     PDF save + read (page-wise) for analysis.

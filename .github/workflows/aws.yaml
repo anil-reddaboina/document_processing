@@ -76,7 +76,8 @@ jobs:
         with:
           # IMPORTANT: Replace 'arn:aws:iam::123456789012:role/github-actions-role' with your actual IAM Role ARN.
           # This role must be configured in AWS to trust the GitHub OIDC provider.
-          role-to-assume: arn:aws:iam::160061378084:role/ecsTaskExecutionRole
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Render Task Definition
